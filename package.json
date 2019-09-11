@@ -7,6 +7,11 @@
     "test": "jest --env node",
     "semantic-release": "semantic-release"
   },
+  "files": [
+    "manifest.js",
+    "README.md",
+    "package.json"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tagkiller/express-gateway-plugin-influx.git"
