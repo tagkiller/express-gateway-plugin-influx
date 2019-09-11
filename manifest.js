@@ -1,9 +1,5 @@
 // @ts-check
 /// <reference path="./node_modules/express-gateway/index.d.ts" />
-// const opentracing = require('opentracing');
-// const initTracer = require('jaeger-client').initTracer;
-// const PrometheusMetricsFactory = require('jaeger-client').PrometheusMetricsFactory;
-// const promClient = require('prom-client');
 const Influx = require('influx');
 const logger = require('express-gateway/lib/logger').gateway;
 
@@ -15,7 +11,6 @@ const plugin = {
     pluginContext.registerPolicy({
       name: 'influx',
       schema: {
-        // $id: 'http://express-gateway.io/schemas/policies/jaeger.json',
         $id: 'http://express-gateway.io/schemas/policies/influx.json',
         type: 'object',
         properties: {
@@ -50,36 +45,14 @@ const plugin = {
                 type: 'string',
                 description: 'Password to connect to the database (default: root)'
               },
-              // options: {
-              //   type: 'object',
-              // }
-              // batchSize: {
-              //   type: 'number',
-              //   description: 'The size of the batch to send to the DB'
-              // }
             },
-            // required: ['host', 'database'],
           },
         },
-        // required: ['influxdbSchema'],
       },
       policy: (actionParams) => {
         logger.debug(`configuring influx client with the following parameters : ${JSON.stringify(actionParams.influxdbSchema)}`)
         const influx = new Influx.InfluxDB({
           ...actionParams.influxdbSchema,
-          // schema: [
-          //   {
-          //     measurement: 'response_times',
-          //     fields: {
-          //       time: Influx.FieldType.INTEGER,
-          //       url: Influx.FieldType.STRING,
-          //       method: Influx.FieldType.STRING,
-          //       duration: Influx.FieldType.INTEGER,
-          //       header: Influx.FieldType.STRING,
-          //       contentType: Influx.FieldType.STRING,
-          //     }
-          //   }
-          // ]
         });
 
         return (req, res, next) => {
@@ -97,7 +70,6 @@ const plugin = {
                 duration: isNaN(duration) ? 0 : duration,
               },
             }])
-            // .then(logger.debug)
             .catch(logger.error);
           };
           // Look at the following doc for the list of events : https://nodejs.org/api/http.html
