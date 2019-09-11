@@ -1,0 +1,39 @@
+{
+  "name": "express-gateway-plugin-influx",
+  "version": "0.0.1",
+  "description": "influx Client implementation plugin for express-gateway-influx.",
+  "main": "manifest.js",
+  "scripts": {
+    "test": "jest --env node",
+    "semantic-release": "semantic-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tagkiller/express-gateway-plugin-influx.git"
+  },
+  "keywords": [
+    "express",
+    "gateway",
+    "express-gateway",
+    "influx",
+    "client",
+    "opentracing"
+  ],
+  "author": "Younes Baddich",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tagkiller/express-gateway-plugin-influx/issues"
+  },
+  "homepage": "https://github.com/tagkiller/express-gateway-plugin-influx#readme",
+  "devDependencies": {
+    "@types/json-schema": "^7.0.3",
+    "axios": "^0.18.0",
+    "express": "^4.16.4",
+    "express-gateway": "^1.15.0",
+    "jest": "^24.5.0",
+    "semantic-release": "^15.13.3"
+  },
+  "dependencies": {
+    "influx": "^5.4.1"
+  }
+}
