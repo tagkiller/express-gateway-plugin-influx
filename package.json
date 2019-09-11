@@ -21,8 +21,8 @@
     "gateway",
     "express-gateway",
     "influx",
-    "client",
-    "opentracing"
+    "influxdb",
+    "client"
   ],
   "author": "Younes Baddich",
   "license": "ISC",
