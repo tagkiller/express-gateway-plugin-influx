@@ -69,7 +69,7 @@ const plugin = {
               fields: {
                 duration: isNaN(duration) ? 0 : duration,
               },
-            }])
+            }]).then(() => logger.info(`metrics sent to ${actionParams.influxdbSchema.host}:${actionParams.influxdbSchema.port}/${actionParams.influxdbSchema.database}`))
             .catch(logger.error);
           };
           // Look at the following doc for the list of events : https://nodejs.org/api/http.html
