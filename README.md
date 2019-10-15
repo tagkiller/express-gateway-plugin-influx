@@ -28,8 +28,9 @@ pipelines:
 
 ## Configuration available
 
-- `measurement` : (string) 'Measurement name'
+- `measurement` : (string) 'Measurement name (default: requests)'
 - `influxdbSchema`
+    - `application`: (string) 'The application name that you monitor (default: default)'
     - `host`: (string) 'The HTTP endpoint when using the remote sampler (default: localhost)'
     - `port`: (number) 'The http port (default: 8086)'
     - `protocol`: (string) 'http/https ... (default: http)'

@@ -21,6 +21,10 @@ const plugin = {
           influxdbSchema: {
             type: 'object',
             properties: {
+              application: {
+                type: 'string',
+                description: 'The name of the application that you monitor',
+              },
               host: {
                 type: 'string',
                 description: 'The HTTP endpoint when using the remote sampler (default: localhost)'
@@ -68,6 +72,7 @@ const plugin = {
               },
               fields: {
                 duration: isNaN(duration) ? 0 : duration,
+                application: actionParams.application ? actionParams.application : 'default',
               },
             }]).then(() => logger.info(`metrics sent to ${actionParams.influxdbSchema.host}:${actionParams.influxdbSchema.port}/${actionParams.influxdbSchema.database}`))
             .catch(logger.error);
