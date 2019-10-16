@@ -60,8 +60,9 @@ const plugin = {
         });
 
         return (req, res, next) => {
+          const start = Date.now();
           function writePoint() {
-            const duration = Date.now() - req.start;
+            const duration = Date.now() - start;
             influx.writePoints([{
               measurement: actionParams.measurement ? actionParams.measurement : 'requests',
               tags: {
@@ -69,10 +70,10 @@ const plugin = {
                 host: req.hostname,
                 verb: req.method,
                 status: res.statusCode,
+                application: actionParams.application ? actionParams.application : 'default',
               },
               fields: {
                 duration: isNaN(duration) ? 0 : duration,
-                application: actionParams.application ? actionParams.application : 'default',
               },
             }]).then(() => logger.info(`metrics sent to ${actionParams.influxdbSchema.host}:${actionParams.influxdbSchema.port}/${actionParams.influxdbSchema.database}`))
             .catch(logger.error);
