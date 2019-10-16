@@ -1,6 +1,6 @@
 {
   "name": "express-gateway-plugin-influx",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "influx Client implementation plugin for express-gateway-influx.",
   "main": "manifest.js",
   "scripts": {
