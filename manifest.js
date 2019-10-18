@@ -30,6 +30,10 @@ const plugin = {
             description: 'Whether to remove Ids from the path that are sent to metrics or not (default: false)',
             default: false,
           },
+          removeIdsRegex: {
+            type: 'String',
+            description: 'Regex to use to match ids to remove from the path tag',
+          },
           influxdbSchema: {
             type: 'object',
             properties: {
@@ -76,7 +80,7 @@ const plugin = {
           const start = Date.now();
           function writePoint() {
             const duration = Date.now() - start;
-            const path = actionParams.removeIds ? req.path.replace(uuidOrIdRegex, '_id_') : req.path;
+            const path = actionParams.removeIds ? req.path.replace(actionParams.removeIdsRegex ? new RegExp(actionParams.removeIdsRegex) : uuidOrIdRegex, '_id_') : req.path;
             influx.writePoints([{
               measurement: actionParams.measurement,
               tags: {

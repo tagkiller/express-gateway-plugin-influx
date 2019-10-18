@@ -35,13 +35,15 @@ The duration is tagged with the following list of tags:
       status: res.statusCode,
       application: _application_
 
-ids and uuid in the path are replaced by _id_ using the following regex : `/([\da-fA-F]{8}\-[\da-fA-F]{4}\-[\da-fA-F]{4}\-[\da-fA-F]{4}\-[\da-fA-F]{12})|(\d+)/g`
+ids and uuid in the path are replaced by _id_ using the following default regex :
+`/([\da-fA-F]{8}\-[\da-fA-F]{4}\-[\da-fA-F]{4}\-[\da-fA-F]{4}\-[\da-fA-F]{12})|(\d+)/g`
 
 ## Configuration available
 
 - `measurement` : (string) 'Measurement name (default: requests)'
 - `application`: (string) 'The application name that you monitor (default: default)'
 - `removeIds`: (boolean) 'Whether to remove Ids from the path that are sent to metrics or not (default: false)'
+- `removeIdsRegex`: (string) 'Regex to use to match ids to remove from the path tag'
 - `influxdbSchema`
     - `host`: (string) 'The HTTP endpoint when using the remote sampler (default: localhost)'
     - `port`: (number) 'The http port (default: 8086)'
