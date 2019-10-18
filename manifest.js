@@ -2,7 +2,6 @@
 /// <reference path="./node_modules/express-gateway/index.d.ts" />
 const Influx = require('influx');
 const logger = require('express-gateway/lib/logger').gateway;
-const uuidOrIdRegex = /([\da-fA-F]{8}\-[\da-fA-F]{4}\-[\da-fA-F]{4}\-[\da-fA-F]{4}\-[\da-fA-F]{12})|(\d+)/g
 
 const plugin = {
   version: '1.0.0',
@@ -26,8 +25,9 @@ const plugin = {
             default: 'default',
           },
           removeIdsRegex: {
-            type: 'String',
+            type: 'string',
             description: 'Regex to use to match ids to remove from the path tag',
+            default: '([\da-fA-F]{8}\-[\da-fA-F]{4}\-[\da-fA-F]{4}\-[\da-fA-F]{4}\-[\da-fA-F]{12})|(\d+)',
           },
           removeIds: {
             type: 'boolean',
@@ -80,7 +80,7 @@ const plugin = {
           const start = Date.now();
           function writePoint() {
             const duration = Date.now() - start;
-            const path = actionParams.removeIds ? req.path.replace(actionParams.removeIdsRegex ? new RegExp(actionParams.removeIdsRegex) : uuidOrIdRegex, '_id_') : req.path;
+            const path = actionParams.removeIds ? req.path.replace(new RegExp(actionParams.removeIdsRegex, 'g'), '_id_') : req.path;
             influx.writePoints([{
               measurement: actionParams.measurement,
               tags: {
