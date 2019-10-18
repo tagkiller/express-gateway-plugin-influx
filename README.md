@@ -41,6 +41,7 @@ ids and uuid in the path are replaced by _id_ using a regex : `(([\da-fA-F]{8}\-
 
 - `measurement` : (string) 'Measurement name (default: requests)'
 - `application`: (string) 'The application name that you monitor (default: default)'
+- `removeIds`: (boolean) 'Whether to remove Ids from the path that are sent to metrics or not (default: false)'
 - `influxdbSchema`
     - `host`: (string) 'The HTTP endpoint when using the remote sampler (default: localhost)'
     - `port`: (number) 'The http port (default: 8086)'
