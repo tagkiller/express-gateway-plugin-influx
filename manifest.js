@@ -27,7 +27,7 @@ const plugin = {
           removeIdsRegex: {
             type: 'string',
             description: 'Regex to use to match ids to remove from the path tag',
-            default: '([\da-fA-F]{8}\-[\da-fA-F]{4}\-[\da-fA-F]{4}\-[\da-fA-F]{4}\-[\da-fA-F]{12})|(\d+)',
+            default: '([0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12})|([0-9]+)',
           },
           removeIds: {
             type: 'boolean',
