@@ -25,6 +25,17 @@ pipelines:
                 port: 8082
 ...
 ```
+## Tags
+
+The duration is tagged with the following list of tags:
+
+      path: req.path,
+      host: req.hostname,
+      verb: req.method,
+      status: res.statusCode,
+      application: _application_
+
+ids and uuid in the path are replaced by _id_ using a regex : `(([\da-fA-F]{8}\-[\da-fA-F]{4}\-[\da-fA-F]{4}\-[\da-fA-F]{4}\-[\da-fA-F]{12})|(\d+))`
 
 ## Configuration available
 
