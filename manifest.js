@@ -2,7 +2,7 @@
 /// <reference path="./node_modules/express-gateway/index.d.ts" />
 const Influx = require('influx');
 const logger = require('express-gateway/lib/logger').gateway;
-const uuidOrIdRegex = /\/([\da-fA-F]{8}\-[\da-fA-F]{4}\-[\da-fA-F]{4}\-[\da-fA-F]{4}\-[\da-fA-F]{12})|(\d+)\//g
+const uuidOrIdRegex = /([\da-fA-F]{8}\-[\da-fA-F]{4}\-[\da-fA-F]{4}\-[\da-fA-F]{4}\-[\da-fA-F]{12})|(\d+)/g
 
 const plugin = {
   version: '1.0.0',
@@ -76,7 +76,7 @@ const plugin = {
           const start = Date.now();
           function writePoint() {
             const duration = Date.now() - start;
-            const path = actionParams.removeIds ? req.path.replace(uuidOrIdRegex, '/_id_/') : req.path;
+            const path = actionParams.removeIds ? req.path.replace(uuidOrIdRegex, '_id_') : req.path;
             influx.writePoints([{
               measurement: actionParams.measurement,
               tags: {

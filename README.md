@@ -35,7 +35,7 @@ The duration is tagged with the following list of tags:
       status: res.statusCode,
       application: _application_
 
-ids and uuid in the path are replaced by _id_ using a regex : `(([\da-fA-F]{8}\-[\da-fA-F]{4}\-[\da-fA-F]{4}\-[\da-fA-F]{4}\-[\da-fA-F]{12})|(\d+))`
+ids and uuid in the path are replaced by _id_ using the following regex : `/([\da-fA-F]{8}\-[\da-fA-F]{4}\-[\da-fA-F]{4}\-[\da-fA-F]{4}\-[\da-fA-F]{12})|(\d+)/g`
 
 ## Configuration available
 
