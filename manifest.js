@@ -25,14 +25,14 @@ const plugin = {
             description: 'The name of the application that you monitor (default: default)',
             default: 'default',
           },
+          removeIdsRegex: {
+            type: 'String',
+            description: 'Regex to use to match ids to remove from the path tag',
+          },
           removeIds: {
             type: 'boolean',
             description: 'Whether to remove Ids from the path that are sent to metrics or not (default: false)',
             default: false,
-          },
-          removeIdsRegex: {
-            type: 'String',
-            description: 'Regex to use to match ids to remove from the path tag',
           },
           influxdbSchema: {
             type: 'object',
