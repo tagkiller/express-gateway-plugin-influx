@@ -32,13 +32,13 @@
   "homepage": "https://github.com/tagkiller/express-gateway-plugin-influx#readme",
   "devDependencies": {
     "@types/json-schema": "^7.0.3",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "express": "^4.16.4",
-    "express-gateway": "^1.15.0",
-    "jest": "^24.5.0",
-    "semantic-release": "^15.13.3"
+    "express-gateway": "^1.16.10",
+    "jest": "^24.9.0",
+    "semantic-release": "^15.14.0"
   },
   "dependencies": {
-    "influx": "^5.4.1"
+    "influx": "^5.5.1"
   }
 }
