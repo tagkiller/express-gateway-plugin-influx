@@ -44,6 +44,7 @@ ids and uuid in the path are replaced by _id_ using the following default regex 
 - `application`: (string) 'The application name that you monitor (default: default)'
 - `removeIds`: (boolean) 'Whether to remove Ids from the path that are sent to metrics or not (default: false)'
 - `removeIdsRegex`: (string) 'Regex to use to match ids to remove from the path tag'
+- `bufferSize`: (number) 'The size to match before sending the data to influx'
 - `influxdbSchema`
     - `host`: (string) 'The HTTP endpoint when using the remote sampler (default: localhost)'
     - `port`: (number) 'The http port (default: 8086)'

@@ -34,6 +34,11 @@ const plugin = {
             description: 'Whether to remove Ids from the path that are sent to metrics or not (default: false)',
             default: false,
           },
+          bufferSize: {
+            type: 'number',
+            description: 'The size to match before sending the data to influx',
+            default: 100,
+          },
           influxdbSchema: {
             type: 'object',
             properties: {
@@ -72,6 +77,7 @@ const plugin = {
       },
       policy: (actionParams) => {
         logger.debug(`configuring influx client with the following parameters : ${JSON.stringify(actionParams.influxdbSchema)}`)
+        const buffer = [];
         const influx = new Influx.InfluxDB({
           ...actionParams.influxdbSchema,
         });
@@ -81,7 +87,7 @@ const plugin = {
           function writePoint() {
             const duration = Date.now() - start;
             const path = actionParams.removeIds ? req.path.replace(new RegExp(actionParams.removeIdsRegex, 'g'), '_id_') : req.path;
-            influx.writePoints([{
+            buffer.push({
               measurement: actionParams.measurement,
               tags: {
                 path: path,
@@ -90,17 +96,19 @@ const plugin = {
                 status: res.statusCode,
                 application: actionParams.application,
               },
-              fields: {
-                duration: isNaN(duration) ? 0 : duration,
-              },
-            }]).then(
-              () => {
-                logger
-                .info(
-                  `metrics sent to ${actionParams.influxdbSchema.host}:${actionParams.influxdbSchema.port}/${actionParams.influxdbSchema.database} - application : ${actionParams.application}`
-                );
-              }
-            ).catch(logger.error);
+              fields: { duration: isNaN(duration) ? 0 : duration },
+            });
+            if (buffer.length >= actionParams.bufferSize) {
+              influx.writePoints(buffer).then(
+                () => {
+                  buffer.length = 0;
+                  logger
+                  .info(
+                    `metrics sent to ${actionParams.influxdbSchema.host}:${actionParams.influxdbSchema.port}/${actionParams.influxdbSchema.database} - application : ${actionParams.application}`
+                  );
+                }
+              ).catch(logger.error);
+            }
           };
           // Look at the following doc for the list of events : https://nodejs.org/api/http.html
           function removeListeners() {
