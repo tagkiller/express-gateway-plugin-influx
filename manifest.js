@@ -82,35 +82,36 @@ const plugin = {
         const influx = new Influx.InfluxDB({
           ...actionParams.influxdbSchema,
         });
+        function writePoint(start, req, res) {
+          const duration = Date.now() - start;
+          const path = actionParams.removeIds ? req.path.replace(removeIdsRegex, '_id_') : req.path;
+          buffer.push({
+            measurement: actionParams.measurement,
+            tags: {
+              path: path,
+              host: req.hostname,
+              verb: req.method,
+              status: res.statusCode,
+              application: actionParams.application,
+            },
+            fields: { duration: isNaN(duration) ? 0 : duration },
+          });
+          if (buffer.length >= actionParams.bufferSize) {
+            influx.writePoints(buffer).then(
+              () => {
+                buffer.length = 0;
+                logger
+                .info(
+                  `metrics sent to ${actionParams.influxdbSchema.host}:${actionParams.influxdbSchema.port}/${actionParams.influxdbSchema.database} - application : ${actionParams.application}`
+                );
+              }
+            ).catch(logger.error);
+          }
+        };
 
         return (req, res, next) => {
           const start = Date.now();
-          function writePoint() {
-            const duration = Date.now() - start;
-            const path = actionParams.removeIds ? req.path.replace(removeIdsRegex, '_id_') : req.path;
-            buffer.push({
-              measurement: actionParams.measurement,
-              tags: {
-                path: path,
-                host: req.hostname,
-                verb: req.method,
-                status: res.statusCode,
-                application: actionParams.application,
-              },
-              fields: { duration: isNaN(duration) ? 0 : duration },
-            });
-            if (buffer.length >= actionParams.bufferSize) {
-              influx.writePoints(buffer).then(
-                () => {
-                  buffer.length = 0;
-                  logger
-                  .info(
-                    `metrics sent to ${actionParams.influxdbSchema.host}:${actionParams.influxdbSchema.port}/${actionParams.influxdbSchema.database} - application : ${actionParams.application}`
-                  );
-                }
-              ).catch(logger.error);
-            }
-          };
+          writePoint(start, req, res);
           // Look at the following doc for the list of events : https://nodejs.org/api/http.html
           function removeListeners() {
             res.removeListener('finish', writePoint);
