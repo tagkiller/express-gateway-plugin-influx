@@ -113,10 +113,8 @@ const plugin = {
             timeoutId && clearTimeout(timeoutId);
             timeoutId = null;
             write();
-          } else {
-            if (!timeoutId) {
-              timeoutId = setTimeout(write, 1000);
-            }
+          } else if (!timeoutId) {
+            timeoutId = setTimeout(write, 1000);
           }
         };
         function removeListeners(res) {
