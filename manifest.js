@@ -78,6 +78,7 @@ const plugin = {
       policy: (actionParams) => {
         logger.debug(`configuring influx client with the following parameters : ${JSON.stringify(actionParams.influxdbSchema)}`)
         const buffer = [];
+        const removeIdsRegex = new RegExp(actionParams.removeIdsRegex, 'g');
         const influx = new Influx.InfluxDB({
           ...actionParams.influxdbSchema,
         });
@@ -86,7 +87,7 @@ const plugin = {
           const start = Date.now();
           function writePoint() {
             const duration = Date.now() - start;
-            const path = actionParams.removeIds ? req.path.replace(new RegExp(actionParams.removeIdsRegex, 'g'), '_id_') : req.path;
+            const path = actionParams.removeIds ? req.path.replace(removeIdsRegex, '_id_') : req.path;
             buffer.push({
               measurement: actionParams.measurement,
               tags: {
