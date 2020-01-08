@@ -82,9 +82,22 @@ const plugin = {
         const influx = new Influx.InfluxDB({
           ...actionParams.influxdbSchema,
         });
+        let timeoutId = null;
+        function write() {
+          influx.writePoints(buffer).then(
+            () => {
+              buffer.length = 0;
+              logger
+              .info(
+                `metrics sent to ${actionParams.influxdbSchema.host}:${actionParams.influxdbSchema.port}/${actionParams.influxdbSchema.database} - application : ${actionParams.application}`
+              );
+            }
+          ).catch(logger.error);
+        }
         function writePoint(start, req, res) {
           const duration = Date.now() - start;
           const path = actionParams.removeIds ? req.path.replace(removeIdsRegex, '_id_') : req.path;
+
           buffer.push({
             measurement: actionParams.measurement,
             tags: {
@@ -97,15 +110,13 @@ const plugin = {
             fields: { duration: isNaN(duration) ? 0 : duration },
           });
           if (buffer.length >= actionParams.bufferSize) {
-            influx.writePoints(buffer).then(
-              () => {
-                buffer.length = 0;
-                logger
-                .info(
-                  `metrics sent to ${actionParams.influxdbSchema.host}:${actionParams.influxdbSchema.port}/${actionParams.influxdbSchema.database} - application : ${actionParams.application}`
-                );
-              }
-            ).catch(logger.error);
+            timeoutId && clearTimeout(timeoutId);
+            timeoutId = null;
+            write();
+          } else {
+            if (!timeoutId) {
+              timeoutId = setTimeout(write, 1000);
+            }
           }
         };
         function removeListeners(res) {
