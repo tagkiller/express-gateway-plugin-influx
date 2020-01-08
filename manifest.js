@@ -108,19 +108,18 @@ const plugin = {
             ).catch(logger.error);
           }
         };
-
-        return (req, res, next) => {
-          const start = Date.now();
-          writePoint(start, req, res);
-          // Look at the following doc for the list of events : https://nodejs.org/api/http.html
-          function removeListeners() {
+        function removeListeners(res) {
             res.removeListener('finish', writePoint);
             res.removeListener('error', removeListeners);
             res.removeListener('close', removeListeners);
-          };
-          res.once('finish', writePoint);
-          res.once('error', removeListeners);
-          res.once('close', removeListeners);
+        }
+
+        return (req, res, next) => {
+          const start = Date.now();
+          // Look at the following doc for the list of events : https://nodejs.org/api/http.html
+          res.once('finish', () => writePoint(start, req, res));
+          res.once('error', () => removeListeners(res));
+          res.once('close', () => removeListeners(res));
           if (next) next();
         }
       },
