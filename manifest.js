@@ -3,6 +3,14 @@
 const Influx = require('influx');
 const logger = require('express-gateway/lib/logger').gateway;
 
+function getDurationInMilliseconds(start) {
+  const NS_PER_SEC = 1e9
+  const NS_TO_MS = 1e6
+  const diff = process.hrtime(start)
+
+  return (diff[0] * NS_PER_SEC + diff[1]) / NS_TO_MS
+}
+
 const plugin = {
   version: '1.0.0',
   policies: ['influx'],
@@ -95,10 +103,11 @@ const plugin = {
           ).catch(logger.error);
         }
         function writePoint(start, req, res) {
-          const duration = Date.now() - start;
+          const duration = getDurationInMilliseconds(start);
           const path = actionParams.removeIds ? req.path.replace(removeIdsRegex, '_id_') : req.path;
 
           buffer.push({
+            timestamp: new Date().setTime(start),
             measurement: actionParams.measurement,
             tags: {
               path: path,
@@ -124,7 +133,7 @@ const plugin = {
         }
 
         return (req, res, next) => {
-          const start = Date.now();
+          const start = process.hrtime();
           // Look at the following doc for the list of events : https://nodejs.org/api/http.html
           res.once('finish', () => writePoint(start, req, res));
           res.once('error', () => removeListeners(res));
