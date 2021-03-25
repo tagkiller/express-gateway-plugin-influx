@@ -107,7 +107,7 @@ const plugin = {
           const path = actionParams.removeIds ? req.path.replace(removeIdsRegex, '_id_') : req.path;
 
           buffer.push({
-            timestamp: new Date().setTime(start),
+            timestamp: new Date(new Date().getTime() - duration),
             measurement: actionParams.measurement,
             tags: {
               path: path,
