@@ -92,7 +92,7 @@ const plugin = {
         });
         let timeoutId = null;
         function write() {
-          influx.writePoints(buffer).then(
+          influx.writePoints(buffer, { precision: 'ms' }).then(
             () => {
               buffer.length = 0;
               logger
